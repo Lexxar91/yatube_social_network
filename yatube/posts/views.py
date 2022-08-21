@@ -20,9 +20,9 @@ def index(request):
     paginator = Paginator(posts_cache, settings.PAG_VAL)
     page_obj = paginator.get_page(request.GET.get('page'))
     context = {
-        'posts': posts_cache, 
+        'posts': posts_cache,
         'page_obj': page_obj,
-        }
+    }
     return render(request, 'posts/index.html', context)
 
 
@@ -75,7 +75,7 @@ def post_detail(request, post_id):
         'post': post,
         'post_sum': post.author.posts.count(),
         'comments': comments,
-        'form':form,
+        'form': form,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -110,22 +110,22 @@ def post_edit(request, post_id):
         files=request.FILES or None,
         instance=post
     )
-    
+
     if request.user != post.author:
         return redirect('posts:index')
-    
+
     if request.method == 'POST':
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             form.save()
             return redirect('posts:profile', post.author)
-   
+
     form = PostForm(instance=post)
-    
+
     context = {
-        'post':post,
-        'form':form,
+        'post': post,
+        'form': form,
         'is_edit': True,
     }
 
@@ -156,9 +156,9 @@ def follow_index(request):
     paginator = Paginator(posts, settings.PAG_VAL)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
+
     context = {
-        'page_obj':page_obj
+        'page_obj': page_obj
     }
     return render(request, 'posts/follow.html', context)
 
@@ -170,7 +170,6 @@ def profile_follow(request, username):
     if request.user != author:
         Follow.objects.get_or_create(user=request.user, author=author)
     return redirect('posts:profile', username=author.username)
-
 
 
 @login_required
