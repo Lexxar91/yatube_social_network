@@ -1,3 +1,5 @@
+{% load account %}
+{% load socialaccount %}
 <header>
   <nav class="navbar navbar-light" style="background-color: lightskyblue">
     <div class="container">
@@ -34,6 +36,7 @@
           <li class="nav-item"> 
             <a class="nav-link link-light" href="{% url 'users:signup' %}">Регистрация</a>
           </li>
+          <a href="{% provider_login_url "vk" method="oauth2" %}"> Войти через VK <img src="{% static 'img/vk.png' %}" width="30" height="30"></a>
           {% endif %}
           {% endwith %} 
         </ul>
