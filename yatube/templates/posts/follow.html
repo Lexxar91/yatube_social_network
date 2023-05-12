@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content%}
-{% block title %}<i>Посты пользователей на которых я подписан</i>{% endblock %}
+{% block title %}Посты пользователей на которых я подписан{% endblock %}
 {% load thumbnail %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/image.css' %}">
 {% for post in page_obj %}
     <ul>
         <li>
@@ -11,8 +14,8 @@
           Дата публикации: {{ post.pub_date|date:"d M Y" }}
         </li>
     </ul>
-   {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
-    <img class="card-img my-2" src="{{ im.url }}">
+   {% thumbnail post.image "600x420" crop="center" upscale=True as im %}
+    <img class="card-img my-2 image-container" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-fluid">
    {% endthumbnail %}
     <p>
       {{post.text}}

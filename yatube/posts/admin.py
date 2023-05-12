@@ -3,6 +3,9 @@ from .models import Post, Group, Comment, Follow
 
 
 class PostAdmin(admin.ModelAdmin):
+    """
+    Административная конфигурация для модели Post.
+    """
     list_display = (
         'pk',
         'text',
@@ -17,6 +20,9 @@ class PostAdmin(admin.ModelAdmin):
 
 
 class GroupAdmin(admin.ModelAdmin):
+    """
+    Административная конфигурация для модели Group.
+    """
     list_display = (
         'title',
         'slug',
@@ -27,6 +33,9 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
+    """
+    Административная конфигурация для модели Comment.
+    """
     list_display = (
         'id',
         'text',
@@ -35,6 +44,9 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 class FollowAdmin(admin.ModelAdmin):
+    """
+    Административная конфигурация для модели Follow.
+    """
     list_display = (
         'user',
         'author'

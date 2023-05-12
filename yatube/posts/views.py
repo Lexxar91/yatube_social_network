@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -7,9 +8,10 @@ from .forms import PostForm, CommentForm
 from .models import Group, Post, User, Follow
 
 
-def index(request):
-    """Функция для отображения записей пользователей
-       на главной странице проекта yatube
+def index(request: HttpRequest) -> HttpResponse:
+    """
+    Функция для отображения записей пользователей
+    на главной странице проекта yatube
     """
     posts_cache = cache.get('index_page')
     if posts_cache is None:
@@ -26,9 +28,10 @@ def index(request):
     return render(request, 'posts/index.html', context)
 
 
-def group_posts(request, slug):
-    """Функция для отображения записей пользователей
-       в определенной тематической группе
+def group_posts(request: HttpRequest, slug: str) -> HttpResponse:
+    """
+    Функция для отображения записей пользователей
+    в определенной тематической группе
     """
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.select_related('author').all()
@@ -42,7 +45,7 @@ def group_posts(request, slug):
     return render(request, 'posts/group_list.html', context)
 
 
-def profile(request, username):
+def profile(request: HttpRequest, username: str) -> HttpResponse:
     """Профаил пользователя и всех его постов"""
     author = get_object_or_404(User, username=username)
     post = author.posts.all()
@@ -66,7 +69,7 @@ def profile(request, username):
     return render(request, 'posts/profile.html', context)
 
 
-def post_detail(request, post_id):
+def post_detail(request: HttpRequest, post_id: int) -> HttpResponse:
     """Детальная информация о посте любого пользователя"""
     post = get_object_or_404(Post, pk=post_id)
     form = CommentForm(request.POST or None)
@@ -81,10 +84,11 @@ def post_detail(request, post_id):
 
 
 @login_required
-def post_create(request):
-    """Функция для создания постов пользователями.
-       После создание поста, пользователь перенаправляется
-       на страницу своего профайла
+def post_create(request: HttpRequest) -> HttpResponse:
+    """
+    Функция для создания постов пользователями.
+    После создание поста, пользователь перенаправляется
+    на страницу своего профайла
     """
     form = PostForm(
         request.POST or None,
@@ -99,10 +103,11 @@ def post_create(request):
 
 
 @login_required
-def post_edit(request, post_id):
-    """Функция для редоктирования постов.
-       Редактировать пост может только автор
-       редактируемого поста
+def post_edit(request: HttpRequest, post_id: int) -> HttpResponse:
+    """
+    Функция для редоктирования постов.
+    Редактировать пост может только автор
+    редактируемого поста
     """
     post = get_object_or_404(Post, id=post_id)
     form = PostForm(
@@ -133,7 +138,7 @@ def post_edit(request, post_id):
 
 
 @login_required
-def add_comment(request, post_id):
+def add_comment(request: HttpRequest, post_id: int) -> HttpResponse:
     """Функция для добавления комментарий к посту"""
     post = get_object_or_404(Post, pk=post_id)
     form = CommentForm(request.POST or None)
@@ -146,10 +151,11 @@ def add_comment(request, post_id):
 
 
 @login_required
-def follow_index(request):
-    """Функция для вывода постов пользователей на которых
-       подписан текущий user
-       user = request.user
+def follow_index(request: HttpRequest) -> HttpResponse:
+    """
+    Функция для вывода постов пользователей на которых
+    подписан текущий user
+    user = request.user
     """
     user = request.user
     posts = Post.objects.filter(author__following__user=user)
@@ -164,7 +170,7 @@ def follow_index(request):
 
 
 @login_required
-def profile_follow(request, username):
+def profile_follow(request: HttpRequest, username: str) -> HttpResponse:
     """Функция для подписки на пользователя"""
     author = get_object_or_404(User, username=username)
     if request.user != author:
@@ -173,7 +179,7 @@ def profile_follow(request, username):
 
 
 @login_required
-def profile_unfollow(request, username):
+def profile_unfollow(request: HttpRequest, username: str) -> HttpResponse:
     """Функция для отписки от пользователя"""
     user = request.user
     author = get_object_or_404(User, username=username)

@@ -5,6 +5,9 @@ from .forms import CreationForm
 
 
 class SignUp(CreateView):
+    """
+    Представление (view) для регистрации нового пользователя.
+    """
     form_class = CreationForm
     success_url = reverse_lazy('posts:index')
     template_name = 'users/signup.html'

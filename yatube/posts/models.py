@@ -6,6 +6,9 @@ User = get_user_model()
 
 
 class Group(models.Model):
+    """
+    Модель группы для постов.
+    """
     title = models.CharField(
         max_length=200,
         verbose_name='Название группы',
@@ -29,6 +32,9 @@ class Group(models.Model):
 
 
 class Post(models.Model):
+    """
+    Модель для поста в блоге.
+    """
     text = models.TextField(
         verbose_name='Текст',
         help_text='Текст для публикации',
@@ -70,6 +76,9 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """
+    Модель для комментария к посту.
+    """
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -103,6 +112,9 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
+    """
+    Модель для подписки на авторов.
+    """
     user = models.ForeignKey(
         User,
         related_name='follower',
