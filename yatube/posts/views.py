@@ -1,11 +1,13 @@
+from urllib.parse import quote
+
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.cache import cache
 from .forms import PostForm, CommentForm
-from .models import Group, Post, User, Follow
+from .models import Group, Post, User, Follow, Comment
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -46,7 +48,9 @@ def group_posts(request: HttpRequest, slug: str) -> HttpResponse:
 
 
 def profile(request: HttpRequest, username: str) -> HttpResponse:
-    """Профаил пользователя и всех его постов"""
+    """
+    Профаил пользователя и всех его постов
+    """
     author = get_object_or_404(User, username=username)
     post = author.posts.all()
     paginator = Paginator(post, settings.PAG_VAL)
@@ -70,7 +74,9 @@ def profile(request: HttpRequest, username: str) -> HttpResponse:
 
 
 def post_detail(request: HttpRequest, post_id: int) -> HttpResponse:
-    """Детальная информация о посте любого пользователя"""
+    """
+    Детальная информация о посте любого пользователя
+    """
     post = get_object_or_404(Post, pk=post_id)
     form = CommentForm(request.POST or None)
     comments = post.comments.filter(post_id=post.id)
@@ -139,7 +145,9 @@ def post_edit(request: HttpRequest, post_id: int) -> HttpResponse:
 
 @login_required
 def add_comment(request: HttpRequest, post_id: int) -> HttpResponse:
-    """Функция для добавления комментарий к посту"""
+    """
+    Функция для добавления комментарий к посту
+    """
     post = get_object_or_404(Post, pk=post_id)
     form = CommentForm(request.POST or None)
     if form.is_valid():
@@ -171,7 +179,9 @@ def follow_index(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def profile_follow(request: HttpRequest, username: str) -> HttpResponse:
-    """Функция для подписки на пользователя"""
+    """
+    Функция для подписки на пользователя
+    """
     author = get_object_or_404(User, username=username)
     if request.user != author:
         Follow.objects.get_or_create(user=request.user, author=author)
@@ -188,3 +198,37 @@ def profile_unfollow(request: HttpRequest, username: str) -> HttpResponse:
     if unfollow.exists():
         unfollow.delete()
     return redirect('posts:profile', username=author.username)
+
+
+@login_required
+def comment_edit(request: HttpRequest, id: int) -> HttpResponse:
+    """
+    Редактирует комментарий с заданным идентификатором.
+    Аргументы:
+        request (HttpRequest): Запрос клиента.
+        id (int): Идентификатор комментария для редактирования.
+    Возвращает:
+        HttpResponse: Ответ сервера (редирект или отображение шаблона).
+    """
+    comment = get_object_or_404(Comment, id=id)
+    form = CommentForm(
+        request.POST or None,
+        instance=comment
+    )
+    if request.user != comment.author:
+        return redirect('posts:index')
+
+    if request.method == 'POST':
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.save()
+            return redirect('posts:post_detail', post_id=comment.post_id)
+    form = CommentForm(instance=comment)
+    context = {
+        'comment': comment,
+        'form': form,
+    }
+    return render(request, 'posts/comment_edit.html', context)
+
+

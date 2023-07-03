@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'about.apps.AboutConfig',
     'sorl.thumbnail',
     'debug_toolbar',
-    
 ]
 
 AUTHENTICATION_BACKENDS = [

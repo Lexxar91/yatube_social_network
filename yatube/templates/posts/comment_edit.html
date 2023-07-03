@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+    Редактировать комментарий
+{% endblock title %}
+{% load user_filters %}
+{% load thumbnail %}
+    <main>
+    {% block content %}
+      <form class="edit-comment-form" method="post" action="{% url 'posts:comment_edit' id=comment.id %}">
+          {% csrf_token %}
+          <input type="text" name="text" value="{{ comment.text }}">
+          <button type="submit">Сохранить</button>
+      </form>
+      {% endblock content %}
+</main>
+{% include 'includes/footer.html' %}

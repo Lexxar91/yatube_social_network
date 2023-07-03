@@ -51,7 +51,7 @@
               {% csrf_token %}      
             <div class="form-floating">
               {{ form.text|addclass:"form-control" }}
-            <label for="floatingTextarea2">Оставьте коментарий</label>
+            <label for="floatingTextarea2">Оставьте комментарий</label>
             </div>
             {{ form.pub_date }}
         <button type="submit" class="btn btn-primary">Отправить</button>
@@ -72,9 +72,14 @@
         {{ comment.text }}<br>
         <b>{{ comment.pub_date}}</b>
       </p>
+      {% if comment.author == request.user %}
+         <a href="{% url 'posts:comment_edit' comment.id %}">
+        <button class="edit-comment-btn" >Редактировать комментарий</button>
+         </a>
+      {% endif %}
     </div>
   </div>
-{% endfor %} 
+{% endfor %}
 </article>
 </div>
 {% endblock content %}

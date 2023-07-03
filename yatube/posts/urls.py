@@ -30,4 +30,9 @@ urlpatterns = (
         views.profile_unfollow,
         name='profile_unfollow'
     ),
-)
+    path(
+        'comment/<int:id>/edit/',
+        views.comment_edit,
+        name='comment_edit'
+    ),
+  )
