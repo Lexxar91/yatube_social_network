@@ -42,7 +42,10 @@
           {% endthumbnail %}
           <a class="btn btn-primary" href="{% url 'posts:post_edit' post_id=post.id %}">
             редактировать запись
-          </a> 
+          </a>
+           <a class="btn btn-primary" href="{% url 'posts:post_delete' post_id=post.id %}">
+            удалить запись
+          </a>
           {% if user.is_authenticated %}
             <div class="card my-4">
             <h5 class="card-header">Добавить комментарий:</h5>

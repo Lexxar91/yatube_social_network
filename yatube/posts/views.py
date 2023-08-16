@@ -1,13 +1,12 @@
-from urllib.parse import quote
-
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.cache import cache
 from .forms import PostForm, CommentForm
 from .models import Group, Post, User, Follow, Comment
+from core.posts_factory import PostFactory
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -102,18 +101,36 @@ def post_create(request: HttpRequest) -> HttpResponse:
     )
     if not form.is_valid():
         return render(request, 'posts/create_post.html', {'form': form})
-    post = form.save(commit=False)
-    post.author = request.user
-    post.save()
+    PostFactory.create(
+        author=request.user,
+        text=form.cleaned_data['text']
+    )
     return redirect('posts:profile', username=request.user.username)
+
+
+@login_required
+def post_delete(request: HttpRequest, post_id: int) -> HttpResponse:
+    """
+    Функция для удаления поста
+    Parameters:
+        request (HttpRequest): Запрос от клиента.
+        post_id (int): Идентификатор удаляемого поста.
+    Returns:
+        HttpResponse: Перенаправление на страницу с постами.
+    """
+    post = get_object_or_404(Post, id=post_id)
+    if request.user != post.author:
+        return redirect('posts:index')
+    PostFactory.delete(post)
+    return redirect('posts:index')
 
 
 @login_required
 def post_edit(request: HttpRequest, post_id: int) -> HttpResponse:
     """
-    Функция для редоктирования постов.
+    Функция для редактирования постов.
     Редактировать пост может только автор
-    редактируемого поста
+    редактируемого поста.
     """
     post = get_object_or_404(Post, id=post_id)
     form = PostForm(
@@ -127,9 +144,11 @@ def post_edit(request: HttpRequest, post_id: int) -> HttpResponse:
 
     if request.method == 'POST':
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            form.save()
+            post = PostFactory.update(
+                post=post,
+                author=request.user,
+                text=form.cleaned_data['text']
+            )
             return redirect('posts:profile', post.author)
 
     form = PostForm(instance=post)
@@ -230,5 +249,3 @@ def comment_edit(request: HttpRequest, id: int) -> HttpResponse:
         'form': form,
     }
     return render(request, 'posts/comment_edit.html', context)
-
-
