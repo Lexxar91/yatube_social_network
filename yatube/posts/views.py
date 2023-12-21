@@ -19,7 +19,7 @@ def index(request: HttpRequest) -> HttpResponse:
         posts_cache = Post.objects.select_related(
             'group',
             'author').order_by('-pub_date')
-        cache.set('index_page', posts_cache, timeout=20)
+        cache.set('index_page', posts_cache, timeout=40)
     paginator = Paginator(posts_cache, settings.PAG_VAL)
     page_obj = paginator.get_page(request.GET.get('page'))
     context = {
