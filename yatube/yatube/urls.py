@@ -1,16 +1,17 @@
 from django.contrib import admin
 from django.urls import include, path
-from allauth.account.views import SignupView
+#from allauth.account.views import SignupView
 from django.conf import settings
 from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('', include('posts.urls', namespace='posts')),
+    path('', include('news.urls', namespace='news')),
     path('admin/', admin.site.urls),
     path('auth/', include('users.urls', namespace='users')),
     path('auth/', include('django.contrib.auth.urls')),
-    path('accounts/', include('allauth.urls')),
+   # path('accounts/', include('allauth.urls')),
     path('about/', include('about.urls', namespace='about')),
 ]
 

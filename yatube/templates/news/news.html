@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}
+    Новости
+{% endblock title %}
+{% block content %}
+{% for news_item in news %}
+<div>
+  <h2>{{ news_item.title }}</h2>
+  <p>
+    {{ news_item.description }}
+  </p>
+  <p>Автор: {{ news_item.author }}</p>
+
+  <a href="{{ news_item.url }}">Источник</a>
+
+  <p>Опубликовано: {{ news_item.publishedAt }}</p>
+</div>
+{% endfor %}
+{% endblock content %}
+{% include 'includes/footer.html' %}

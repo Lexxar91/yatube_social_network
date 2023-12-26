@@ -1,5 +1,7 @@
+{% comment %}
 {% load account %}
 {% load socialaccount %}
+{% endcomment %}
 <header>
   <nav class="navbar navbar-light" style="background-color: lightskyblue">
     <div class="container">
@@ -16,6 +18,9 @@
           <li class="nav-item">
             <a class="nav-link {% if view_name  == 'about:tech' %}active{% endif %}" href="{% url 'about:tech' %}">Технологии</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link link-light" href="{% url 'news:view_news' %}">Новости</a>
+          </li>
           {% if request.user.is_authenticated %}
           <li class="nav-item"> 
             <a class="nav-link {% if view_name  == 'posts:post_create' %}active{% endif %}" href="{% url 'posts:post_create' %}">Новая запись</a>
@@ -24,7 +29,7 @@
             <a class="nav-link link-light {% if view_name  == 'users:password_reset' %}active{% endif %}" href="{% url 'users:password_reset' %}">Изменить пароль</a>
           </li>
           <li class="nav-item"> 
-            <a class="nav-link link-light" href="{% url 'users:logout' %}">Выйти</a>
+            <a class="nav-link {% if view_name == 'users:logout' %}active{% endif %}" href="{% url 'users:logout' %}">Выйти</a>
           </li>
           <li>
             Пользователь: {{ user.username }}
@@ -36,7 +41,9 @@
           <li class="nav-item"> 
             <a class="nav-link link-light" href="{% url 'users:signup' %}">Регистрация</a>
           </li>
-          <a href="{% provider_login_url "vk" method="oauth2" %}"> Войти через VK <img src="{% static 'img/vk.png' %}" width="30" height="30"></a>
+             {% comment %}
+                <a href="{% provider_login_url "vk" method="oauth2" %}"> Войти через VK <img src="{% static 'img/vk.png' %}" width="30" height="30"></a>
+             {% endcomment %}
           {% endif %}
           {% endwith %} 
         </ul>

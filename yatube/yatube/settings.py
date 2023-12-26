@@ -39,10 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.vk',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.vk',
     'posts.apps.PostsConfig',
     'users.apps.UsersConfig',
     'core.apps.CoreConfig',
@@ -51,21 +51,21 @@ INSTALLED_APPS = [
     'debug_toolbar',
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #'allauth.account.middleware.AccountMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'yatube.urls'
