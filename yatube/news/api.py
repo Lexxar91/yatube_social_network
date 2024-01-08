@@ -24,7 +24,7 @@ async def get_news() -> Optional[List[Dict[str, Any]]]:
     Возвращает None, если происходит ошибка во время запроса.
     """
     api_key = os.getenv('NEWS_API_KEY')
-    api_url = f'https://newsapi.org/v2/top-headlines?country=ru&apiKey=ab70586de8214f8cbca7cdb052a3f5f3'
+    api_url = f'https://newsapi.org/v2/top-headlines?country=ru&apiKey={api_key}'
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(api_url) as response:
